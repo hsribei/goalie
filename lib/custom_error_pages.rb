@@ -7,8 +7,6 @@ require 'action_dispatch/http/request'
 class CustomErrorPages
   LOCALHOST = [/^127\.0\.0\.\d{1,3}$/, "::1", /^0:0:0:0:0:0:0:1(%.*)?$/].freeze
 
-  RESCUES_TEMPLATE_PATH = File.join(File.dirname(__FILE__), 'custom_error_pages', 'views')
-
   cattr_accessor :rescue_responses
   @@rescue_responses = Hash.new(:internal_server_error)
   @@rescue_responses.update({
@@ -23,9 +21,12 @@ class CustomErrorPages
     'ActionController::InvalidAuthenticityToken' => :unprocessable_entity
   })
 
-  cattr_accessor :rescue_templates
-  @@rescue_templates = Hash.new('diagnostics')
-  @@rescue_templates.update({
+  # TODO this should probably move to the controller, that is, have
+  # http error codes map directly to controller actions, then let
+  # controller handle different exception classes however it wants
+  cattr_accessor :rescue_actions
+  @@rescue_actions = Hash.new('diagnostics')
+  @@rescue_actions.update({
     'ActionView::MissingTemplate'         => 'missing_template',
     'ActionController::RoutingError'      => 'routing_error',
     'AbstractController::ActionNotFound'  => 'unknown_action',
@@ -91,7 +92,7 @@ class CustomErrorPages
       :full_trace => full_trace(exception)
     }
     request.env['custom_error_pages.error_params'] = error_params
-    action = @@rescue_templates[exception.class.name]
+    action = @@rescue_actions[exception.class.name]
     response = LocalErrorsController.action(action).call(request.env).last
     render(status_code(exception), response.body)
   end
