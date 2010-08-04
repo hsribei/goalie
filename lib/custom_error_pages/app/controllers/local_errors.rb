@@ -1,5 +1,5 @@
 class LocalErrorsController < ActionController::Base
-  self.append_view_path "#{File.dirname(__FILE__)}/../views/local_errors"
+  self.append_view_path "#{File.dirname(__FILE__)}/../views"
 
   before_filter :set_error_instance_variables
 

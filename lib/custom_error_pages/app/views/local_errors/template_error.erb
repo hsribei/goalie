@@ -15,7 +15,7 @@
 
 <% @real_exception = @exception
    @exception = @exception.original_exception || @exception %>
-<%= render :file => "_trace.erb" %>
+<%= render :partial => 'trace.erb' %>
 <% @exception = @real_exception %>
 
-<%= render :file => "_request_and_response.erb" %>
+<%= render :partial => 'request_and_response' %>
