@@ -77,7 +77,7 @@ class CustomErrorPages
   # Render detailed diagnostics for unhandled exceptions rescued from
   # a controller action.
   def rescue_action_locally(request, exception)
-    require 'custom_error_pages/controllers/local_errors'
+    require 'custom_error_pages/app/controllers/local_errors'
 
     error_params = {
       :request => request, :exception => exception,
@@ -87,7 +87,6 @@ class CustomErrorPages
     }
     request.env['custom_error_pages.error_params'] = error_params
     action = @@rescue_templates[exception.class.name]
-    debugger
     response = LocalErrorsController.action(action).call(request.env).last
     render(status_code(exception), response.body)
   end
