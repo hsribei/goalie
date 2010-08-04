@@ -2,8 +2,8 @@ require 'active_support/core_ext/exception'
 require 'active_support/notifications'
 require 'action_dispatch/http/request'
 
-# This middleware rescues any exception returned by the application and renders
-# nice exception pages if it's being rescued locally.
+# This middleware rescues any exception returned by the application
+# and renders nice exception pages.
 class CustomErrorPages
   LOCALHOST = [/^127\.0\.0\.\d{1,3}$/, "::1", /^0:0:0:0:0:0:0:1(%.*)?$/].freeze
 
