@@ -12,31 +12,34 @@ class CustomErrorPages
   cattr_accessor :rescue_responses
   @@rescue_responses = Hash.new(:internal_server_error)
   @@rescue_responses.update({
-                              'ActionController::RoutingError'             => :not_found,
-                              'AbstractController::ActionNotFound'         => :not_found,
-                              'ActiveRecord::RecordNotFound'               => :not_found,
-                              'ActiveRecord::StaleObjectError'             => :conflict,
-                              'ActiveRecord::RecordInvalid'                => :unprocessable_entity,
-                              'ActiveRecord::RecordNotSaved'               => :unprocessable_entity,
-                              'ActionController::MethodNotAllowed'         => :method_not_allowed,
-                              'ActionController::NotImplemented'           => :not_implemented,
-                              'ActionController::InvalidAuthenticityToken' => :unprocessable_entity
-                            })
+    'ActionController::RoutingError'             => :not_found,
+    'AbstractController::ActionNotFound'         => :not_found,
+    'ActiveRecord::RecordNotFound'               => :not_found,
+    'ActiveRecord::StaleObjectError'             => :conflict,
+    'ActiveRecord::RecordInvalid'                => :unprocessable_entity,
+    'ActiveRecord::RecordNotSaved'               => :unprocessable_entity,
+    'ActionController::MethodNotAllowed'         => :method_not_allowed,
+    'ActionController::NotImplemented'           => :not_implemented,
+    'ActionController::InvalidAuthenticityToken' => :unprocessable_entity
+  })
 
   cattr_accessor :rescue_templates
   @@rescue_templates = Hash.new('diagnostics')
   @@rescue_templates.update({
-                              'ActionView::MissingTemplate'         => 'missing_template',
-                              'ActionController::RoutingError'      => 'routing_error',
-                              'AbstractController::ActionNotFound'  => 'unknown_action',
-                              'ActionView::Template::Error'         => 'template_error'
-                            })
+    'ActionView::MissingTemplate'         => 'missing_template',
+    'ActionController::RoutingError'      => 'routing_error',
+    'AbstractController::ActionNotFound'  => 'unknown_action',
+    'ActionView::Template::Error'         => 'template_error'
+  })
 
-  FAILSAFE_RESPONSE = [500, {'Content-Type' => 'text/html'},
-                       ["<html><body><h1>500 Internal Server Error</h1>" <<
-                        "If you are the administrator of this website, then please read this web " <<
-                        "application's log file and/or the web server's log file to find out what " <<
-                        "went wrong.</body></html>"]]
+  FAILSAFE_RESPONSE = [
+    500,
+    {'Content-Type' => 'text/html'},
+    ["<html><body><h1>500 Internal Server Error</h1>" <<
+     "If you are the administrator of this website, then please read " <<
+     "this web application's log file and/or the web server's log " <<
+     "file to find out what went wrong.</body></html>"]
+   ]
 
   def initialize(app, consider_all_requests_local = false)
     @app = app
@@ -46,12 +49,13 @@ class CustomErrorPages
   def call(env)
     status, headers, body = @app.call(env)
 
-    # Only this middleware cares about RoutingError. So, let's just raise
-    # it here.
-    # TODO: refactor this middleware to handle the X-Cascade scenario without
-    # having to raise an exception.
+    # Only this middleware cares about RoutingError. So, let's just
+    # raise it here.
+    # TODO: refactor this middleware to handle the X-Cascade scenario
+    # without having to raise an exception.
     if headers['X-Cascade'] == 'pass'
-      raise ActionController::RoutingError, "No route matches #{env['PATH_INFO'].inspect}"
+      raise(ActionController::RoutingError,
+            "No route matches #{env['PATH_INFO'].inspect}")
     end
 
     [status, headers, body]
@@ -70,7 +74,8 @@ class CustomErrorPages
       rescue_action_in_public(exception)
     end
   rescue Exception => failsafe_error
-    $stderr.puts "Error during failsafe response: #{failsafe_error}\n  #{failsafe_error.backtrace * "\n  "}"
+    $stderr.puts("Error during failsafe response: #{failsafe_error}\n" <<
+                 "#{failsafe_error.backtrace * "\n  "}")
     FAILSAFE_RESPONSE
   end
 
@@ -92,12 +97,13 @@ class CustomErrorPages
   end
 
   # Attempts to render a static error page based on the
-  # <tt>status_code</tt> thrown, or just return headers if no such file
-  # exists. At first, it will try to render a localized static page.
-  # For example, if a 500 error is being handled Rails and locale is :da,
-  # it will first attempt to render the file at <tt>public/500.da.html</tt>
-  # then attempt to render <tt>public/500.html</tt>. If none of them exist,
-  # the body of the response will be left empty.
+  # <tt>status_code</tt> thrown, or just return headers if no such
+  # file exists. At first, it will try to render a localized static
+  # page.  For example, if a 500 error is being handled Rails and
+  # locale is :da, it will first attempt to render the file at
+  # <tt>public/500.da.html</tt> then attempt to render
+  # <tt>public/500.html</tt>. If none of them exist, the body of the
+  # response will be left empty.
   def rescue_action_in_public(exception)
     status = status_code(exception)
     locale_path = "#{public_path}/#{status}.#{I18n.locale}.html" if I18n.locale
@@ -114,7 +120,9 @@ class CustomErrorPages
 
   # True if the request came from localhost, 127.0.0.1.
   def local_request?(request)
-    LOCALHOST.any? { |local_ip| local_ip === request.remote_addr && local_ip === request.remote_ip }
+    LOCALHOST.any? { |local_ip|
+      local_ip === request.remote_addr && local_ip === request.remote_ip
+    }
   end
 
   def status_code(exception)
@@ -122,7 +130,9 @@ class CustomErrorPages
   end
 
   def render(status, body)
-    [status, {'Content-Type' => 'text/html', 'Content-Length' => body.bytesize.to_s}, [body]]
+    [status,
+     {'Content-Type' => 'text/html', 'Content-Length' => body.bytesize.to_s},
+     [body]]
   end
 
   def public_path
@@ -134,7 +144,11 @@ class CustomErrorPages
 
     ActiveSupport::Deprecation.silence do
       message = "\n#{exception.class} (#{exception.message}):\n"
-      message << exception.annoted_source_code if exception.respond_to?(:annoted_source_code)
+
+      if exception.respond_to?(:annoted_source_code)
+        message << exception.annoted_source_code
+      end
+
       message << "  " << application_trace(exception).join("\n  ")
       logger.fatal("#{message}\n\n")
     end
