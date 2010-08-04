@@ -1,0 +1,5 @@
+
+* Give proper credit to author of Rails' ShowExceptions
+* Give proper credit ao author of Rails' exception_notification
+* Turn into a gem
+* Create Railtie
