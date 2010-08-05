@@ -21,18 +21,6 @@ class CustomErrorPages
     'ActionController::InvalidAuthenticityToken' => :unprocessable_entity
   })
 
-  # TODO this should probably move to the controller, that is, have
-  # http error codes map directly to controller actions, then let
-  # controller handle different exception classes however it wants
-  cattr_accessor :rescue_actions
-  @@rescue_actions = Hash.new('diagnostics')
-  @@rescue_actions.update({
-    'ActionView::MissingTemplate'         => 'missing_template',
-    'ActionController::RoutingError'      => 'routing_error',
-    'AbstractController::ActionNotFound'  => 'unknown_action',
-    'ActionView::Template::Error'         => 'template_error'
-  })
-
   FAILSAFE_RESPONSE = [
     500,
     {'Content-Type' => 'text/html'},
@@ -83,7 +71,18 @@ class CustomErrorPages
   # Render detailed diagnostics for unhandled exceptions rescued from
   # a controller action.
   def rescue_action_locally(request, exception)
-    require 'custom_error_pages/app/controllers/local_errors'
+    require 'custom_error_pages/app/controllers/local_errors_controller'
+
+    # TODO this should probably move to the controller, that is, have
+    # http error codes map directly to controller actions, then let
+    # controller handle different exception classes however it wants
+    rescue_actions = Hash.new('diagnostics')
+    rescue_actions.update({
+      'ActionView::MissingTemplate'         => 'missing_template',
+      'ActionController::RoutingError'      => 'routing_error',
+      'AbstractController::ActionNotFound'  => 'unknown_action',
+      'ActionView::Template::Error'         => 'template_error'
+    })
 
     error_params = {
       :request => request, :exception => exception,
@@ -92,7 +91,7 @@ class CustomErrorPages
       :full_trace => full_trace(exception)
     }
     request.env['custom_error_pages.error_params'] = error_params
-    action = @@rescue_actions[exception.class.name]
+    action = rescue_actions[exception.class.name]
     response = LocalErrorsController.action(action).call(request.env).last
     render(status_code(exception), response.body)
   end
