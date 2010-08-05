@@ -60,7 +60,7 @@ class CustomErrorPages
     if @consider_all_requests_local || local_request?(request)
       rescue_action_locally(request, exception)
     else
-      rescue_action_in_public(exception)
+      rescue_action_in_public(request, exception)
     end
   rescue Exception => failsafe_error
     $stderr.puts("Error during failsafe response: #{failsafe_error}\n" <<
@@ -96,26 +96,19 @@ class CustomErrorPages
     render(status_code(exception), response.body)
   end
 
-  # Attempts to render a static error page based on the
-  # <tt>status_code</tt> thrown, or just return headers if no such
-  # file exists. At first, it will try to render a localized static
-  # page.  For example, if a 500 error is being handled Rails and
-  # locale is :da, it will first attempt to render the file at
-  # <tt>public/500.da.html</tt> then attempt to render
-  # <tt>public/500.html</tt>. If none of them exist, the body of the
-  # response will be left empty.
-  def rescue_action_in_public(exception)
-    status = status_code(exception)
-    locale_path = "#{public_path}/#{status}.#{I18n.locale}.html" if I18n.locale
-    path = "#{public_path}/#{status}.html"
+  def rescue_action_in_public(request, exception)
+    require 'custom_error_pages/app/controllers/public_errors_controller'
 
-    if locale_path && File.exist?(locale_path)
-      render(status, File.read(locale_path))
-    elsif File.exist?(path)
-      render(status, File.read(path))
-    else
-      render(status, '')
-    end
+    error_params = {
+      :request => request, :exception => exception,
+      :application_trace => application_trace(exception),
+      :framework_trace => framework_trace(exception),
+      :full_trace => full_trace(exception)
+    }
+    request.env['custom_error_pages.error_params'] = error_params
+    action = @@rescue_responses[exception.class.name]
+    response = PublicErrorsController.action(action).call(request.env).last
+    render(status_code(exception), response.body)
   end
 
   # True if the request came from localhost, 127.0.0.1.
