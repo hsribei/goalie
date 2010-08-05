@@ -71,7 +71,7 @@ class CustomErrorPages
   # Render detailed diagnostics for unhandled exceptions rescued from
   # a controller action.
   def rescue_action_locally(request, exception)
-    require 'custom_error_pages/app/controllers/local_errors_controller'
+#    require 'custom_error_pages/app/controllers/local_errors_controller'
 
     # TODO this should probably move to the controller, that is, have
     # http error codes map directly to controller actions, then let

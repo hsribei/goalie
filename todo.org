@@ -1,5 +1,8 @@
 
+* Make views overridable from inside app
+* Make controllers overridable from inside app
 * Give proper credit to author of Rails' ShowExceptions
 * Give proper credit ao author of Rails' exception_notification
+* Give proper credit to Rails' default error pages that were copied
 * Turn into a gem
 * Create Railtie
