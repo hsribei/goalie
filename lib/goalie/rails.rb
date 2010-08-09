@@ -1,6 +1,3 @@
-require File.expand_path('../../goalie', __FILE__)
-require 'rails'
-
 module Goalie
   class Engine < Rails::Engine
 
