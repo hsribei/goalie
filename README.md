@@ -71,6 +71,17 @@ probably shouldn't use these variables at all. The only place it makes
 sense is to have a more detailed error screen for admins or other
 high-level users.
 
+## Credit
+
+Goalie copies a lot of code and ideas from:
+ * Rails' `ShowExceptions` middleware
+ * Rails' default error views
+ * Rails' exception_notification plugin
+
+Which are mostly the work of [Joshua Peek](http://joshpeek.com), with
+help from various contributors. We're highly indebted to them and
+thank them a lot for their work.
+
 ## Contributions
 
 Any form of feedback, patches, issues, and documentation are highly
