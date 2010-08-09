@@ -20,7 +20,7 @@ class LocalErrorsController < ActionController::Base
 
   private
   def set_error_instance_variables
-    error_params = env['custom_error_pages.error_params']
+    error_params = env['goalie.error_params']
 
     error_params.each do |name, value|
       instance_variable_set("@#{name}", value)
