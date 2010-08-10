@@ -1,5 +1,4 @@
 class PublicErrorsController < ActionController::Base
-  self.append_view_path "#{File.dirname(__FILE__)}/../views"
 
   # 403
   def forbidden
