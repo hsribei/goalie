@@ -20,6 +20,7 @@ module Goalie
                                 'ActionController::MethodNotAllowed'         => :method_not_allowed,
                                 'ActionController::NotImplemented'           => :not_implemented,
                                 'ActionController::InvalidAuthenticityToken' => :unprocessable_entity
+                                'Goalie::Forbidden'                          => :forbidden
                               })
 
     FAILSAFE_RESPONSE = [
