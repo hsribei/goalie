@@ -19,7 +19,7 @@ module Goalie
       'ActiveRecord::RecordNotSaved'               => :unprocessable_entity,
       'ActionController::MethodNotAllowed'         => :method_not_allowed,
       'ActionController::NotImplemented'           => :not_implemented,
-      'ActionController::InvalidAuthenticityToken' => :unprocessable_entity
+      'ActionController::InvalidAuthenticityToken' => :unprocessable_entity,
       'Goalie::Forbidden'                          => :forbidden
     })
 
