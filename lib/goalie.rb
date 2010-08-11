@@ -11,26 +11,26 @@ module Goalie
     cattr_accessor :rescue_responses
     @@rescue_responses = Hash.new(:internal_server_error)
     @@rescue_responses.update({
-                                'ActionController::RoutingError'             => :not_found,
-                                'AbstractController::ActionNotFound'         => :not_found,
-                                'ActiveRecord::RecordNotFound'               => :not_found,
-                                'ActiveRecord::StaleObjectError'             => :conflict,
-                                'ActiveRecord::RecordInvalid'                => :unprocessable_entity,
-                                'ActiveRecord::RecordNotSaved'               => :unprocessable_entity,
-                                'ActionController::MethodNotAllowed'         => :method_not_allowed,
-                                'ActionController::NotImplemented'           => :not_implemented,
-                                'ActionController::InvalidAuthenticityToken' => :unprocessable_entity
-                                'Goalie::Forbidden'                          => :forbidden
-                              })
+      'ActionController::RoutingError'             => :not_found,
+      'AbstractController::ActionNotFound'         => :not_found,
+      'ActiveRecord::RecordNotFound'               => :not_found,
+      'ActiveRecord::StaleObjectError'             => :conflict,
+      'ActiveRecord::RecordInvalid'                => :unprocessable_entity,
+      'ActiveRecord::RecordNotSaved'               => :unprocessable_entity,
+      'ActionController::MethodNotAllowed'         => :method_not_allowed,
+      'ActionController::NotImplemented'           => :not_implemented,
+      'ActionController::InvalidAuthenticityToken' => :unprocessable_entity
+      'Goalie::Forbidden'                          => :forbidden
+    })
 
     FAILSAFE_RESPONSE = [
-                         500,
-                         {'Content-Type' => 'text/html'},
-                         ["<html><body><h1>500 Internal Server Error</h1>" <<
-                          "If you are the administrator of this website, then please read " <<
-                          "this web application's log file and/or the web server's log " <<
-                          "file to find out what went wrong.</body></html>"]
-                        ]
+       500,
+       {'Content-Type' => 'text/html'},
+       ["<html><body><h1>500 Internal Server Error</h1>" <<
+        "If you are the administrator of this website, then please read " <<
+        "this web application's log file and/or the web server's log " <<
+        "file to find out what went wrong.</body></html>"]
+    ]
 
     def initialize(app, consider_all_requests_local = false)
       @app = app
@@ -78,11 +78,11 @@ module Goalie
       # controller handle different exception classes however it wants
       rescue_actions = Hash.new('diagnostics')
       rescue_actions.update({
-                              'ActionView::MissingTemplate'         => 'missing_template',
-                              'ActionController::RoutingError'      => 'routing_error',
-                              'AbstractController::ActionNotFound'  => 'unknown_action',
-                              'ActionView::Template::Error'         => 'template_error'
-                            })
+        'ActionView::MissingTemplate'         => 'missing_template',
+        'ActionController::RoutingError'      => 'routing_error',
+        'AbstractController::ActionNotFound'  => 'unknown_action',
+        'ActionView::Template::Error'         => 'template_error'
+      })
 
       error_params = {
         :request => request, :exception => exception,
