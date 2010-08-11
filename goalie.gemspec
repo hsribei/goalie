@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
      "app/views/public_errors/internal_server_error.html",
      "app/views/public_errors/not_found.html",
      "app/views/public_errors/unprocessable_entity.html",
+     "goalie.gemspec",
      "lib/goalie.rb",
      "lib/goalie/exceptions.rb",
      "lib/goalie/rails.rb",
