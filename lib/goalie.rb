@@ -106,7 +106,7 @@ module Goalie
         :framework_trace => framework_trace(exception),
         :full_trace => full_trace(exception)
       }
-      request.env['custom_error_pages.error_params'] = error_params
+      request.env['goalie.error_params'] = error_params
       action = @@rescue_responses[exception.class.name]
       response = PublicErrorsController.action(action).call(request.env).last
       render(status_code(exception), response.body)
@@ -114,6 +114,7 @@ module Goalie
 
     # True if the request came from localhost, 127.0.0.1.
     def local_request?(request)
+      return false
       LOCALHOST.any? { |local_ip|
         local_ip === request.remote_addr && local_ip === request.remote_ip
       }
