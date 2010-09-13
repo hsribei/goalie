@@ -2,6 +2,8 @@ require 'active_support/core_ext/exception'
 require 'active_support/notifications'
 require 'action_dispatch/http/request'
 
+require 'goalie/exceptions'
+
 module Goalie
   # This middleware rescues any exception returned by the application
   # and renders nice exception pages.
@@ -20,7 +22,8 @@ module Goalie
       'ActionController::MethodNotAllowed'         => :method_not_allowed,
       'ActionController::NotImplemented'           => :not_implemented,
       'ActionController::InvalidAuthenticityToken' => :unprocessable_entity,
-      'Goalie::Forbidden'                          => :forbidden
+      'Goalie::Forbidden'                          => :forbidden,
+      'Goalie::NotFound'                           => :not_found
     })
 
     FAILSAFE_RESPONSE = [
