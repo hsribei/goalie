@@ -114,7 +114,6 @@ module Goalie
 
     # True if the request came from localhost, 127.0.0.1.
     def local_request?(request)
-      return false
       LOCALHOST.any? { |local_ip|
         local_ip === request.remote_addr && local_ip === request.remote_ip
       }
