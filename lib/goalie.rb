@@ -8,7 +8,6 @@ module Goalie
   # This middleware rescues any exception returned by the application
   # and renders nice exception pages.
   class CustomErrorPages
-    LOCALHOST = [/^127\.0\.0\.\d{1,3}$/, "::1", /^0:0:0:0:0:0:0:1(%.*)?$/].freeze
 
     cattr_accessor :rescue_responses
     @@rescue_responses = Hash.new(:internal_server_error)
@@ -62,7 +61,7 @@ module Goalie
       log_error(exception)
 
       request = ActionDispatch::Request.new(env)
-      if @consider_all_requests_local || local_request?(request)
+      if @consider_all_requests_local || request.local?
         rescue_action_locally(request, exception)
       else
         rescue_action_in_public(request, exception)
@@ -110,13 +109,6 @@ module Goalie
       action = @@rescue_responses[exception.class.name]
       response = PublicErrorsController.action(action).call(request.env).last
       render(status_code(exception), response.body)
-    end
-
-    # True if the request came from localhost, 127.0.0.1.
-    def local_request?(request)
-      LOCALHOST.any? { |local_ip|
-        local_ip === request.remote_addr && local_ip === request.remote_ip
-      }
     end
 
     def status_code(exception)
