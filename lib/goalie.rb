@@ -5,6 +5,8 @@ require 'action_dispatch/http/request'
 require 'goalie/exceptions'
 
 module Goalie
+  autoload :ErrorDetails, "goalie/error_details"
+
   # This middleware rescues any exception returned by the application
   # and renders nice exception pages.
   class CustomErrorPages

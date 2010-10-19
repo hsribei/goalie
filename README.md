@@ -55,9 +55,10 @@ you can redirect them to others, for example, with:
 
 You can also customize only the views and use Goalie's default
 controller. All you need is to have inside `app/views/public_errors`
-views with the same names as the actions listed above. Besides the
-standard stuff that Rails makes available to views, you will also have
-access to the following instance variables:
+views with the same names as the actions listed above. 
+
+Besides the standard stuff that Rails makes available to views, you will also have
+access to the following instance variables if you include the Goalie::ErrorDetails module:
 
  * `@request`
  * `@exception`
@@ -69,7 +70,11 @@ Be VERY careful when using this in production, as you could expose
 sensitive information inside the request and exception. Generally, you
 probably shouldn't use these variables at all. The only place it makes
 sense is to have a more detailed error screen for admins or other
-high-level users.
+high-level users.  By default these details are not available to the public errors views
+but can be made available if you override the `PublicErrorsController` and 
+include the Goalie::ErrorDetails module.
+
+
 
 ## Credit
 

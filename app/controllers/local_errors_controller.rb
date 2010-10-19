@@ -1,6 +1,5 @@
 class LocalErrorsController < ActionController::Base
-
-  before_filter :set_error_instance_variables
+  include Goalie::ErrorDetails
 
   def routing_error
   end
@@ -17,13 +16,5 @@ class LocalErrorsController < ActionController::Base
   def diagnostics
   end
 
-  private
-  def set_error_instance_variables
-    error_params = env['goalie.error_params']
-
-    error_params.each do |name, value|
-      instance_variable_set("@#{name}", value)
-    end
-  end
 
 end
