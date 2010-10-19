@@ -50,14 +50,8 @@ Gem::Specification.new do |s|
     "test/custom_error_pages_test.rb"
   ]
 
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-    else
-    end
-  else
-  end
+  s.add_runtime_dependency("activesupport", [">= 3.0.0"])
+  s.add_runtime_dependency("actionpack", [">= 3.0.0"])
+  
 end
 
