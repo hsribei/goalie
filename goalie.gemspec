@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{goalie}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Helder Ribeiro"]
-  s.date = %q{2010-10-13}
+  s.date = %q{2010-10-20}
   s.description = %q{Middleware to catch exceptions and Rails Engine to render them. Error-handling views and controllers can be easily overriden.}
   s.email = %q{helder@gmail.com}
   s.extra_rdoc_files = [
@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
      "app/views/public_errors/unprocessable_entity.html",
      "goalie.gemspec",
      "lib/goalie.rb",
+     "lib/goalie/error_details.rb",
      "lib/goalie/exceptions.rb",
      "lib/goalie/rails.rb",
      "lib/goalie/version.rb",
@@ -50,8 +51,20 @@ Gem::Specification.new do |s|
     "test/custom_error_pages_test.rb"
   ]
 
-  s.add_runtime_dependency("activesupport", [">= 3.0.0"])
-  s.add_runtime_dependency("actionpack", [">= 3.0.0"])
-  
+  if s.respond_to? :specification_version then
+    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
+    s.specification_version = 3
+
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<actionpack>, [">= 3.0.0"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0"])
+    else
+      s.add_dependency(%q<actionpack>, [">= 3.0.0"])
+      s.add_dependency(%q<activesupport>, [">= 3.0.0"])
+    end
+  else
+    s.add_dependency(%q<actionpack>, [">= 3.0.0"])
+    s.add_dependency(%q<activesupport>, [">= 3.0.0"])
+  end
 end
 

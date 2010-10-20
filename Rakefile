@@ -15,6 +15,8 @@ begin
     gemspec.email = "helder@gmail.com"
     gemspec.homepage = "http://github.com/obvio171/goalie"
     gemspec.authors = ["Helder Ribeiro"]
+    gemspec.add_dependency 'actionpack', '>= 3.0.0'
+    gemspec.add_dependency 'activesupport', '>= 3.0.0'
   end
 
   Jeweler::GemcutterTasks.new
