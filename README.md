@@ -9,11 +9,6 @@ things.
 
 ## Installation
 
-WARNING: at this point, Goalie is highly experimental and should not
-be used in production!! Everything can and probably will change before
-it is ready for production. Install it only if you want to play with
-and/or contribute to it.
-
     gem install goalie
 
 After you install it and add it to your `Gemfile`, you have to require
